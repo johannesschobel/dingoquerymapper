@@ -1,0 +1,25 @@
+{
+    "name": "johannesschobel/dingoquerymapper",
+    "description": "Uses Dingo/API Request Query Parameters to filter Laravel Models",
+    "license": "MIT",
+    "keywords": [
+		"laravel", "API", "dingo", "query string"
+	],
+    "authors": [
+        {
+            "name": "Johannes Schobel",
+            "email": "johannes.schobel@googlemail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.5.0",
+		"laravel/framework": "5.1.*"
+    },
+    "require-dev": {
+	},
+    "autoload": {
+        "psr-0": {
+            "JohannesSchobel\\DingoQueryMapper": "src/"
+        }
+    }
+}
