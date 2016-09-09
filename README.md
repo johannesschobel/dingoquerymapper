@@ -52,7 +52,9 @@ the `$users` will only contain (maximum) `10` users, where the `name` starts wit
 
 The corresponding eloquent request would look like this:
 ```php
-$users = User::where('name', 'like', 'j%')->where('age', '>=', '18')->take(10);
+$users = User::where('name', 'like', 'j%')
+   ->where('age', '>=', '18')
+   ->take(10);
 ``` 
 
 Of course you can pass an existing `Builder` instead of a `Model`. This way, you can append to the builder.
@@ -72,7 +74,10 @@ Consider the following example:
 
 would first filter all `active` users and then apply the custom filters (or sort order), like this:
 ```php
-$users = User::where('is_active', '=', true)->where('name', 'like', 'j%')->where('age', '>=', '18')->take(10);
+$users = User::where('is_active', '=', true)
+   ->where('name', 'like', 'j%')
+   ->where('age', '>=', '18')
+   ->take(10);
 ``` 
 
 ## Parameters
@@ -116,6 +121,6 @@ Thereby, this plugin offers the following operators: `=`, `!=`, `<`, `<=`, `=>`.
 
 Of course you can combine the filters with the other query parameters:
 ```php
-/index? name=j*&age>=18&sort=age,-name&limit=20
+/index?name=j*&age>=18&sort=age,-name&limit=20
 ```
 would return the first `20` elements, where the `name` starts with `j`, the `age` is `>= 18` sorted by `age ASC` and `name DESC`.
