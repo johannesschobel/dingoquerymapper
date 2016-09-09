@@ -6,13 +6,13 @@ First, add the respective line to your composer file
 ```json
 "require" : {
    ...
-   "johannesschobel/dingoquerymapper": "0.1"
+   "johannesschobel/dingoquerymapper": "dev-master"
 }
 ```
 and run `composer install` to install the new component.
 
 
-Then add the `ServiceProvider` to your `app.php` configuration file, like this:
+Then add respective `ServiceProvider` from the package to your `config/app.php` configuration file, like this:
 ```php
 'providers' => [
    ...,
@@ -20,15 +20,17 @@ Then add the `ServiceProvider` to your `app.php` configuration file, like this:
 ],
 ```
 
-If you want, you can overwrite the provided configuration with the following command:
+If you want, you can overwrite the basic configuration using the following command:
 ```php
 php artisan vendor:publish --provider="JohannesSchobel\DingoQueryMapper\DingoQueryMapperServiceProvider" --tag="config"
 ```
-You can customize the `limit` parameter or the query parameters to be excluded from the service provider.
+This will copy the `dingoquerymapper` configuration file to your `config` folder. Using this file, you can 
+customize the `limit` parameter or the query parameters to be excluded from the service provider.
 
 # Usage
 ## Example
-In order to use the plugin, simply create a new instance from `DingoQueryMapperBuilder` and pass the request. The rest is handled by the `Builder`.
+In order to use the plugin, simply create a new instance from `DingoQueryMapperBuilder` and pass the request. 
+The rest is handled by the `Builder` itself.
 
 Consider the following example:
 ```php
