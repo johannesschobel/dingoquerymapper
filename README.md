@@ -5,7 +5,7 @@ Uses Dingo/API Request Query Parameters to filter Laravel Models
 First, add the respective line to your composer file
 ```json
 "require" : {
-   ...
+   ...,
    "johannesschobel/dingoquerymapper": "dev-master"
 }
 ```
@@ -80,10 +80,25 @@ $users = User::where('is_active', '=', true)
    ->take(10);
 ``` 
 
+## Dingo/API Example
+If you use [Dingo/API](https://github.com/dingo/api) as your preferred API framework, you can use this package right 
+away. If you are not using Dingo/API, you should really consider using it - it is awesome!
+
+However, all of the information described above still remains when using Dingo/API. Only, the returning the results 
+varies because you need to use Dingo's response objects.
+
+You can simply return your results using
+```php 
+    return $this->response
+       ->paginator($users, new UserTransformer());
+```
+
+That's all - really!
+
 ## Parameters
 This plugin provides some pre-defined parameter names to be automatically filled.
 
-### `Limit` and `Page`
+### `limit` and `page`
 In order to limit the amount of response elements, simply add respective `limit` query parameter, like this:
 
 ```php
@@ -107,7 +122,7 @@ For example
 ```
 sorts the results by age (ascending), then by name (descending; note the `-`before the `name` field!)
 
-### `filter`
+### `custom filters`
 Of course you may pass custom query parameters to the builder in order to `filter` the requested data.
 For example:
 
