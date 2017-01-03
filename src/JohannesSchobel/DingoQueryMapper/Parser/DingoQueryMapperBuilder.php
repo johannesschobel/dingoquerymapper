@@ -3,10 +3,14 @@
 namespace JohannesSchobel\DingoQueryMapper\Parser;
 
 use Exception;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Schema;
 use JohannesSchobel\DingoQueryMapper\Exceptions\EmptyColumnException;
 use JohannesSchobel\DingoQueryMapper\Exceptions\UnknownColumnException;
+use JohannesSchobel\DingoQueryMapper\Operators\CollectionOperator;
 
 class DingoQueryMapperBuilder
 {
@@ -22,7 +26,7 @@ class DingoQueryMapperBuilder
      *
      * @var \Illuminate\Database\Eloquent\Builder
      */
-    protected $builder;
+    //protected $builder;
 
     /**
      * The uri parser to extract the query parameters
@@ -32,12 +36,16 @@ class DingoQueryMapperBuilder
 
     protected $wheres = [];
 
+    // ok
     protected $sort = [];
 
+    // ok
     protected $limit;
 
+    // ok
     protected $page = 1;
 
+    // ok
     protected $offset = 0;
 
     protected $columns = ['*'];
@@ -52,18 +60,19 @@ class DingoQueryMapperBuilder
 
     protected $query;
 
+    // ok
     protected $result;
+
+    // ok
+    protected $operator;
 
     /**
      * DingoQueryMapperBuilder constructor.
      *
-     * @param \Illuminate\Database\Eloquent\Builder | \Illuminate\Database\Eloquent\Model $builder an existing builder or a new model
      * @param Request $request the request with query parameters
      */
-    public function __construct($builder, Request $request)
+    public function __construct(Request $request)
     {
-        $this->builder = $builder;
-
         $this->uriParser = new UriParser($request);
 
         $this->sort = config('dingoquerymapper.defaults.sort');
@@ -71,15 +80,40 @@ class DingoQueryMapperBuilder
         $this->limit = config('dingoquerymapper.defaults.limit');
 
         $this->excludedParameters = array_merge($this->excludedParameters, config('dingoquerymapper.excludedParameters'));
+    }
 
-        if($builder instanceof \Illuminate\Database\Eloquent\Model) {
-            $this->model = $builder;
-            $this->query = $this->model->newQuery();
-        }
-        elseif ($builder instanceof \Illuminate\Database\Eloquent\Builder) {
-            $this->model = $builder->getModel();
-            $this->query = $builder;
-        }
+    /**
+     * Create the Query from an existing builder
+     *
+     * @param Builder $builder
+     * @return $this
+     */
+    public function createFromBuilder(Builder $builder) {
+        $this->model = $builder->getModel();
+        $this->query = $builder;
+
+        $this->build();
+        return $this;
+    }
+
+    /**
+     * Create the query from an empty model
+     *
+     * @param Model $model
+     * @return $this
+     */
+    public function createFromModel(Model $model) {
+        $this->model = $model;
+        $this->query = $this->model->newQuery();
+
+        return $this;
+    }
+
+    public function createFromCollection(Collection $collection) {
+
+        $this->operator = new CollectionOperator($collection);
+
+        return $this;
     }
 
     public function build()
@@ -108,14 +142,6 @@ class DingoQueryMapperBuilder
         $this->query->select($this->columns);
 
         return $this;
-    }
-
-    public function getAndPaginate() {
-        if($this->hasLimit()) {
-            return $this->paginate();
-        }
-
-        return $this->get();
     }
 
     public function get()

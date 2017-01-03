@@ -6,15 +6,13 @@ use Illuminate\Support\ServiceProvider;
 
 class DingoQueryMapperServiceProvider extends ServiceProvider
 {
-    public function boot()
-    {
+    public function boot() {
         $this->publishes([
             __DIR__.'/../../config/dingoquerymapper.php'   => config_path('dingoquerymapper.php'),
         ], 'config');
     }
 
-    public function register()
-    {
+    public function register() {
         $this->setupConfig();
     }
 
