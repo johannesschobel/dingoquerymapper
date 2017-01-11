@@ -2,8 +2,8 @@
 
 namespace JohannesSchobel\DingoQueryMapper\Parser;
 
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use JohannesSchobel\DingoQueryMapper\Operators\CollectionOperator;
 
 class DingoQueryMapper
@@ -73,7 +73,7 @@ class DingoQueryMapper
      *
      * @return mixed
      */
-    public function filter() {
+    private function filter() {
         if ($this->allowsFilter()) {
             if ($this->hasFilters()) {
                 $tmp = [];

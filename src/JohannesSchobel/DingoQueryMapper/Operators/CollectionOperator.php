@@ -1,10 +1,10 @@
 <?php
 
 namespace JohannesSchobel\DingoQueryMapper\Operators;
-use Illuminate\Database\Eloquent\Collection;
+
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
-use JohannesSchobel\DingoQueryMapper\Exceptions\UnknownColumnException;
+use Illuminate\Support\Collection;
 
 class CollectionOperator implements Operations
 {
