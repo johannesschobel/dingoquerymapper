@@ -131,7 +131,7 @@ class UriParser
 
         list($key, $value) = explode($operator, $parameter);
 
-        if(empty($value)) {
+        if(strlen($value) == 0) {
             return;
         }
 

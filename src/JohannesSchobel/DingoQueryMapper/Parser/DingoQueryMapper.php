@@ -20,7 +20,7 @@ class DingoQueryMapper
     // sort parameters
     protected $sort = [];
     // elements per page
-    protected $limit = 25;
+    protected $limit = 15;
     // page to display
     protected $page = 1;
     // offset of elements (page-1)*limit
