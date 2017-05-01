@@ -1,5 +1,5 @@
 {
-    "name": "johannesschobel/dingoquerymapper",
+    "name": "youkoulayley/dingoquerymapper",
     "description": "Uses Dingo/API Request Query Parameters to filter Laravel Models",
     "license": "MIT",
     "keywords": [
