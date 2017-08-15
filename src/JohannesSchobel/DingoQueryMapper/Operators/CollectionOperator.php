@@ -21,6 +21,14 @@ class CollectionOperator implements Operations
     }
 
     public function paginate($page, $limit) {
+
+        // the user has disabled the pagination!
+        // so we manually set the size of the resultset
+        if($limit == 0) {
+            $page = 1;
+            $limit = count($this->collection);
+        }
+
         $slice = $this->collection->forPage($page, $limit);
 
         return new LengthAwarePaginator(
