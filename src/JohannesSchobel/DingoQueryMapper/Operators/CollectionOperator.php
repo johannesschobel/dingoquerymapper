@@ -24,9 +24,14 @@ class CollectionOperator implements Operations
 
         // the user has disabled the pagination!
         // so we manually set the size of the resultset
-        if($limit == 0) {
+        if ($limit == 0) {
             $page = 1;
-            $limit = count($this->collection);
+            if($this->collection->isEmpty()) {
+                $limit = config('dingoquerymapper.defaults.limit');
+            }
+            else {
+                $limit = count($this->collection);
+            }
         }
 
         $slice = $this->collection->forPage($page, $limit);
