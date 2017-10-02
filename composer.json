@@ -11,11 +11,12 @@
             "email": "johannes.schobel@googlemail.com"
         }
     ],
-    "require": {
+    "require": {./ve  b
         "php": ">=5.5.0",
 		"laravel/framework": ">=5.1"
     },
     "require-dev": {
+        "squizlabs/php_codesniffer": "2.*"
 	},
     "autoload": {
         "psr-0": {

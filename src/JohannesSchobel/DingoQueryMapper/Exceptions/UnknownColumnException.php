@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace JohannesSchobel\DingoQueryMapper\Exceptions;
 
