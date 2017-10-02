@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace JohannesSchobel\DingoQueryMapper\Parser;
 
@@ -30,6 +30,7 @@ class DingoQueryMapperBuilder
 
     /**
      * The uri parser to extract the query parameters
+     *
      * @var UriParser
      */
     protected $uriParser;
@@ -79,7 +80,10 @@ class DingoQueryMapperBuilder
 
         $this->limit = config('dingoquerymapper.defaults.limit');
 
-        $this->excludedParameters = array_merge($this->excludedParameters, config('dingoquerymapper.excludedParameters'));
+        $this->excludedParameters = array_merge(
+            $this->excludedParameters,
+            config('dingoquerymapper.excludedParameters')
+        );
     }
 
     /**
@@ -88,11 +92,13 @@ class DingoQueryMapperBuilder
      * @param Builder $builder
      * @return $this
      */
-    public function createFromBuilder(Builder $builder) {
+    public function createFromBuilder(Builder $builder)
+    {
         $this->model = $builder->getModel();
         $this->query = $builder;
 
         $this->build();
+
         return $this;
     }
 
@@ -102,14 +108,16 @@ class DingoQueryMapperBuilder
      * @param Model $model
      * @return $this
      */
-    public function createFromModel(Model $model) {
+    public function createFromModel(Model $model)
+    {
         $this->model = $model;
         $this->query = $this->model->newQuery();
 
         return $this;
     }
 
-    public function createFromCollection(Collection $collection) {
+    public function createFromCollection(Collection $collection)
+    {
 
         $this->operator = new CollectionOperator($collection);
 
@@ -120,8 +128,7 @@ class DingoQueryMapperBuilder
     {
         $this->prepare();
 
-        if (config('dingoquerymapper.allowFilters'))
-        {
+        if (config('dingoquerymapper.allowFilters')) {
             if ($this->hasWheres()) {
                 array_map([$this, 'addWhereToQuery'], $this->wheres);
             }
@@ -151,7 +158,7 @@ class DingoQueryMapperBuilder
 
     public function paginate()
     {
-        if (! $this->hasLimit()) {
+        if (!$this->hasLimit()) {
             throw new Exception("You can't use unlimited option for pagination", 1);
         }
 
@@ -180,7 +187,9 @@ class DingoQueryMapperBuilder
 
     private function prepareConstant($parameter)
     {
-        if (! $this->uriParser->hasQueryParameter($parameter)) return;
+        if (!$this->uriParser->hasQueryParameter($parameter)) {
+            return;
+        }
 
         $callback = [$this, $this->setterMethodName($parameter)];
 
@@ -196,7 +205,7 @@ class DingoQueryMapperBuilder
 
     private function setPage($page)
     {
-        $this->page = (int) $page;
+        $this->page = (int)$page;
 
         $this->offset = ($page - 1) * $this->limit;
     }
@@ -209,7 +218,7 @@ class DingoQueryMapperBuilder
 
         array_map([$this, 'setColumn'], $columns);
 
-        if( $this->hasColumns($columns) == 0) {
+        if ($this->hasColumns($columns) == 0) {
             throw new EmptyColumnException("Columns are empty");
         }
     }
@@ -220,7 +229,7 @@ class DingoQueryMapperBuilder
             return $this->appendRelationColumn($column);
         }
 
-        if (! $this->hasTableColumn($column)) {
+        if (!$this->hasTableColumn($column)) {
             throw new UnknownColumnException("Unknown column '{$column}'");
         }
 
@@ -254,7 +263,7 @@ class DingoQueryMapperBuilder
 
     private function closureRelationColumns($columns)
     {
-        return function($q) use ($columns) {
+        return function ($q) use ($columns) {
             $q->select($columns);
         };
     }
@@ -273,15 +282,15 @@ class DingoQueryMapperBuilder
         $column = $sort;
         $direction = 'asc';
 
-        if($sort[0] == '-') {
+        if ($sort[0] == '-') {
             $column = substr($sort, 1);
             $direction = 'desc';
         }
 
         $this->sort[] = [
-            'column' => $column,
-            'direction' => $direction
-        ]; 
+            'column'    => $column,
+            'direction' => $direction,
+        ];
     }
 
     private function setGroupBy($groups)
@@ -289,12 +298,12 @@ class DingoQueryMapperBuilder
         $this->groupBy = array_filter(explode(',', $groups));
     }
 
-    private function setLimit($limit) 
+    private function setLimit($limit)
     {
-        $this->limit = (int) $limit;
+        $this->limit = (int)$limit;
     }
 
-    private function setWheres($parameters) 
+    private function setWheres($parameters)
     {
         $this->wheres = $parameters;
     }
@@ -311,7 +320,7 @@ class DingoQueryMapperBuilder
             return $this->applyCustomFilter($key, $operator, $value);
         }
 
-        if (! $this->hasTableColumn($key)) {
+        if (!$this->hasTableColumn($key)) {
             throw new UnknownColumnException("Unknown column '{$key}'");
         }
 
@@ -342,7 +351,7 @@ class DingoQueryMapperBuilder
         return in_array($key, $this->excludedParameters);
     }
 
-    private function hasWheres() 
+    private function hasWheres()
     {
         return (count($this->wheres) > 0);
     }

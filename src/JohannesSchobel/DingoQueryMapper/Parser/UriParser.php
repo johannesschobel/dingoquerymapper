@@ -22,7 +22,7 @@ class UriParser
     protected $predefinedParams = [
         'sort',
         'limit',
-        'page', 
+        'page',
         //'columns',
         //'rels',
     ];
@@ -52,7 +52,8 @@ class UriParser
      *
      * @param Request $request the given request
      */
-    public function __construct(Request $request) {
+    public function __construct(Request $request)
+    {
         $this->request = $request;
 
         $this->uri = $request->getRequestUri();
@@ -72,7 +73,8 @@ class UriParser
      * @param $key
      * @return mixed
      */
-    public function queryParameter($key) {
+    public function queryParameter($key)
+    {
         $keys = array_pluck($this->queryParameters, 'key');
         $queryParameters = array_combine($keys, $this->queryParameters);
        
@@ -84,7 +86,8 @@ class UriParser
      *
      * @return array
      */
-    public function predefinedParameters() {
+    public function predefinedParameters()
+    {
         return $this->predefinedParams;
     }
 
@@ -93,11 +96,11 @@ class UriParser
      *
      * @return array
      */
-    public function whereParameters() {
+    public function whereParameters()
+    {
         return array_filter(
-            $this->queryParameters, 
-            function($queryParameter)
-            {
+            $this->queryParameters,
+            function ($queryParameter) {
                 $key = $queryParameter['key'];
                 return (! in_array($key, $this->predefinedParams));
             }
@@ -109,7 +112,8 @@ class UriParser
      *
      * @param $query
      */
-    private function setQueryParameters($query) {
+    private function setQueryParameters($query)
+    {
         $queryParameters = array_filter(explode('&', $query));
 
         array_map([$this, 'appendQueryParameter'], $queryParameters);
@@ -120,10 +124,11 @@ class UriParser
      *
      * @param $parameter
      */
-    private function appendQueryParameter($parameter) {
+    private function appendQueryParameter($parameter)
+    {
         preg_match($this->pattern, $parameter, $matches);
 
-        if(empty($matches)) {
+        if (empty($matches)) {
             return;
         }
 
@@ -131,13 +136,17 @@ class UriParser
 
         list($key, $value) = explode($operator, $parameter);
 
-        if(strlen($value) == 0) {
+        if (strlen($value) == 0) {
             return;
         }
 
         if (( ! $this->isPredefinedParameter($key)) && $this->isLikeQuery($value)) {
-            if ($operator == '=')    $operator = 'like';
-            if ($operator == '!=')   $operator = 'not like';
+            if ($operator == '=') {
+                $operator = 'like';
+            }
+            if ($operator == '!=') {
+                $operator = 'not like';
+            }
 
             $value = str_replace('*', '%', $value);
         }
@@ -154,7 +163,8 @@ class UriParser
      *
      * @return string
      */
-    protected function hasQueryUri() {
+    protected function hasQueryUri()
+    {
         return ($this->query);
     }
 
@@ -162,7 +172,8 @@ class UriParser
      * Checks if the URI has query parameters
      * @return bool
      */
-    public function hasQueryParameters() {
+    public function hasQueryParameters()
+    {
         return (count($this->queryParameters) > 0);
     }
 
@@ -172,7 +183,8 @@ class UriParser
      * @param $key
      * @return bool
      */
-    public function hasQueryParameter($key) {
+    public function hasQueryParameter($key)
+    {
         $keys = array_pluck($this->queryParameters, 'key');
 
         return (in_array($key, $keys));
@@ -184,7 +196,8 @@ class UriParser
      * @param $query
      * @return int
      */
-    private function isLikeQuery($query) {
+    private function isLikeQuery($query)
+    {
         $pattern = "/^\*|\*$/";
 
         return (preg_match($pattern, $query, $matches));
@@ -196,7 +209,8 @@ class UriParser
      * @param $key
      * @return bool
      */
-    private function isPredefinedParameter($key) {
+    private function isPredefinedParameter($key)
+    {
         return (in_array($key, $this->predefinedParams));
     }
 }

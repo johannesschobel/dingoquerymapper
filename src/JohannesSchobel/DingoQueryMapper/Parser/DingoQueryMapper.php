@@ -28,7 +28,8 @@ class DingoQueryMapper
     // the parameters to exclude from parsing (e.g., token)
     protected $excludedParameters = [];
 
-    public function __construct(Request $request) {
+    public function __construct(Request $request)
+    {
         $this->request = $request;
 
         $this->uriParser = new UriParser($request);
@@ -36,7 +37,10 @@ class DingoQueryMapper
         $this->sort = config('dingoquerymapper.defaults.sort');
         $this->limit = config('dingoquerymapper.defaults.limit');
 
-        $this->excludedParameters = array_merge($this->excludedParameters, config('dingoquerymapper.excludedParameters'));
+        $this->excludedParameters = array_merge(
+            $this->excludedParameters,
+            config('dingoquerymapper.excludedParameters')
+        );
 
         $this->setFilters($this->uriParser->whereParameters());
     }
@@ -47,9 +51,11 @@ class DingoQueryMapper
      * @param Collection $collection
      * @return $this
      */
-    public function createFromCollection(Collection $collection) {
+    public function createFromCollection(Collection $collection)
+    {
         $this->operator = new CollectionOperator($collection, $this->request);
         $this->prepare();
+
         return $this;
     }
 
@@ -58,7 +64,8 @@ class DingoQueryMapper
      *
      * @return $this
      */
-    private function prepare() {
+    private function prepare()
+    {
         $constantParameters = $this->uriParser->predefinedParameters();
         array_map([$this, 'prepareConstant'], $constantParameters);
 
@@ -73,13 +80,14 @@ class DingoQueryMapper
      *
      * @return mixed
      */
-    private function filter() {
+    private function filter()
+    {
         if ($this->allowsFilter()) {
             if ($this->hasFilters()) {
                 $tmp = [];
-                foreach($this->filters as $filter) {
+                foreach ($this->filters as $filter) {
                     // check, if it is a "forbidden" query parameter
-                    if($this->isExcludedParameter($filter['key'])) {
+                    if ($this->isExcludedParameter($filter['key'])) {
                         continue;
                     }
                     $tmp[] = $filter;
@@ -97,7 +105,8 @@ class DingoQueryMapper
      *
      * @return mixed
      */
-    public function get() {
+    public function get()
+    {
         return $this->operator->get();
     }
 
@@ -106,7 +115,8 @@ class DingoQueryMapper
      *
      * @return mixed
      */
-    public function paginate() {
+    public function paginate()
+    {
         return $this->operator->paginate($this->page, $this->limit);
     }
 
@@ -115,16 +125,21 @@ class DingoQueryMapper
      *
      * @return mixed
      */
-    private function sort() {
+    private function sort()
+    {
         return $this->operator->sort($this->sort);
     }
 
     /**
      * Calls respective setXXX Method for the predefined parameters
+     *
      * @param $parameter
      */
-    private function prepareConstant($parameter) {
-        if (! $this->uriParser->hasQueryParameter($parameter)) return;
+    private function prepareConstant($parameter)
+    {
+        if (!$this->uriParser->hasQueryParameter($parameter)) {
+            return;
+        }
 
         $callback = [$this, $this->setterMethodName($parameter)];
         $callbackParameter = $this->uriParser->queryParameter($parameter);
@@ -137,8 +152,9 @@ class DingoQueryMapper
      *
      * @param $page
      */
-    private function setPage($page) {
-        $this->page = (int) $page;
+    private function setPage($page)
+    {
+        $this->page = (int)$page;
         $this->offset = ($page - 1) * $this->limit;
     }
 
@@ -147,8 +163,9 @@ class DingoQueryMapper
      *
      * @param $limit
      */
-    private function setLimit($limit) {
-        $this->limit = (int) $limit;
+    private function setLimit($limit)
+    {
+        $this->limit = (int)$limit;
     }
 
     /**
@@ -156,7 +173,8 @@ class DingoQueryMapper
      *
      * @param $sort
      */
-    private function setSort($sort) {
+    private function setSort($sort)
+    {
         $this->sort = [];
         $orders = array_filter(explode(',', $sort));
         array_map([$this, 'appendSort'], $orders);
@@ -167,7 +185,8 @@ class DingoQueryMapper
      *
      * @param $filters
      */
-    private function setFilters($filters) {
+    private function setFilters($filters)
+    {
         $this->filters = $filters;
     }
 
@@ -176,18 +195,19 @@ class DingoQueryMapper
      *
      * @param $sort
      */
-    private function appendSort($sort) {
+    private function appendSort($sort)
+    {
         $column = $sort;
         $direction = 'asc';
 
-        if($sort[0] == '-') {
+        if ($sort[0] == '-') {
             $column = substr($sort, 1);
             $direction = 'desc';
         }
 
         $this->sort[] = [
-            'column' => $column,
-            'direction' => $direction
+            'column'    => $column,
+            'direction' => $direction,
         ];
     }
 
@@ -197,7 +217,8 @@ class DingoQueryMapper
      * @param $parameter
      * @return string
      */
-    private function setterMethodName($parameter) {
+    private function setterMethodName($parameter)
+    {
         return 'set' . studly_case($parameter);
     }
 
@@ -207,7 +228,8 @@ class DingoQueryMapper
      * @param $parameter
      * @return bool
      */
-    private function isExcludedParameter($parameter) {
+    private function isExcludedParameter($parameter)
+    {
         return in_array($parameter, $this->excludedParameters);
     }
 
@@ -216,7 +238,8 @@ class DingoQueryMapper
      *
      * @return mixed
      */
-    private function allowsFilter() {
+    private function allowsFilter()
+    {
         return config('dingoquerymapper.allowFilters');
     }
 
@@ -225,7 +248,8 @@ class DingoQueryMapper
      *
      * @return bool
      */
-    private function hasFilters() {
+    private function hasFilters()
+    {
         return (count($this->filters) > 0);
     }
 }
