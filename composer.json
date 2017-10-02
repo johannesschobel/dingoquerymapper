@@ -16,7 +16,6 @@
 		"laravel/framework": ">=5.1"
     },
     "require-dev": {
-        "squizlabs/php_codesniffer": "2.*"
 	},
     "autoload": {
         "psr-0": {
