@@ -3,8 +3,8 @@
     "description": "Uses Dingo/API Request Query Parameters to filter Laravel Models",
     "license": "MIT",
     "keywords": [
-		"laravel", "API", "dingo", "query string"
-	],
+        "laravel", "API", "dingo", "query string"
+    ],
     "authors": [
         {
             "name": "Johannes Schobel",
@@ -13,13 +13,20 @@
     ],
     "require": {
         "php": ">=5.5.0",
-		"laravel/framework": ">=5.1"
+        "laravel/framework": ">=5.1"
     },
     "require-dev": {
-	},
+    },
     "autoload": {
         "psr-0": {
             "JohannesSchobel\\DingoQueryMapper": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "JohannesSchobel\\DingoQueryMapper\\DingoQueryMapperServiceProvider"
+            ]
         }
     }
 }
