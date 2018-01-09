@@ -118,6 +118,10 @@ class CollectionOperator implements Operations
         if ($operator == '=') {
             $operator = '==';
         }
+
+        // escaping
+        $key = str_replace("'", "\'", $key);
+
         $rule = "'%s' %s '%s'"; // key, operator, value
         $rule = sprintf($rule, $key, $operator, $value);
 
