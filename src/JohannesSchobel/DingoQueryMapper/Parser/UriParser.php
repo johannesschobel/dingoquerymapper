@@ -113,7 +113,10 @@ class UriParser
      * @param $query
      */
     private function setQueryParameters($query)
-    {
+    {   
+        // escaping
+        $query = str_replace("'", "\'", $query);
+        
         $queryParameters = array_filter(explode('&', $query));
 
         array_map([$this, 'appendQueryParameter'], $queryParameters);
