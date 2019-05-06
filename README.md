@@ -104,7 +104,7 @@ will return the next `20` entries that are located on `page 2`.
 
 
 ### `sort`
-In order to sort the results using different parameters, you can simply concatenate them using `,`. In order to provide `ASC` and `DESC` sorting, you may prepend a `-` before respective attribute.
+In order to sort the results using different parameters, you can simply concatenate them using `,`. In order to provide `ASC` and `DESC` sorting, you may prepend a `-` before respective attribute. Sorting is case-insensitive.
 
 For example
 ```php

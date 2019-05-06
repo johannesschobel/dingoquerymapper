@@ -68,9 +68,9 @@ class CollectionOperator implements Operations
             foreach ($criteria as $c) {
                 // normalize sort direction
                 $orderType = strtolower($c['direction']);
-                if ($first[$c['column']] < $second[$c['column']]) {
+                if (strtolower($first[$c['column']]) < strtolower($second[$c['column']])) {
                     return $orderType === "asc" ? -1 : 1;
-                } elseif ($first[$c['column']] > $second[$c['column']]) {
+                } elseif (strtolower($first[$c['column']]) > strtolower($second[$c['column']])) {
                     return $orderType === "asc" ? 1 : -1;
                 }
             }
