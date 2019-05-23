@@ -127,16 +127,32 @@ class CollectionOperator implements Operations
 
         // now check if the operator was "(not) like"?
         if (strpos($operator, 'like') !== false) {
-            $value = str_replace('%', '', $value);
-            $rule = "substr('%s', 0, strlen('%s')) %s '%s'"; // haystack, $needle, $comparable, $needle
-            $expectedResult = '===';
+            // check for %value% to perform a more fuzzy match
+            if (preg_match('/%(.*).{1,}?%/', $value)) {
+                $value = str_replace('%', '', $value);
+                $rule = "%sis_int(stripos('%s', '%s')) ? true : false";
 
-            if (stripos($operator, 'not') !== false) {
-                // it is a NOT LIKE operator
-                $expectedResult = '!==';
-            }
+                $expectedResult = '';
 
-            $rule = sprintf($rule, $key, $value, $expectedResult, $value);
+                if (stripos($operator, 'not') !== false) {
+                    // it is a NOT LIKE operator
+                    $expectedResult = '!';
+                }
+
+                $rule = sprintf($rule, $expectedResult, $key, $value);
+            } else {
+                $value = str_replace('%', '', $value);    
+                $rule = "substr('%s', 0, strlen('%s')) %s '%s'"; // haystack, $needle, $comparable, $needle
+
+                $expectedResult = '===';
+
+                if (stripos($operator, 'not') !== false) {
+                    // it is a NOT LIKE operator
+                    $expectedResult = '!==';
+                }
+
+                $rule = sprintf($rule, $key, $value, $expectedResult, $value);
+            }  
         }
 
         return $rule;
